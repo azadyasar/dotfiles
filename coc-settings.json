@@ -1,0 +1,9 @@
+{
+	"java.jdt.ls.vmargs": "-Dfile.encoding=UTF-8 -noverify -Xmx1G -XX:+UseG1GC -XX:+UseStringDeduplication -javaagent:/home/niko/.m2/repository/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar",
+	"java.trace.server": "verbose",
+	"java.format.settings.url": "/home/niko/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml",
+	"java.home": "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home",
+	"metals.enable": true,
+	"metals.javaHome": "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home",
+	"suggest.noselect": true
+}
