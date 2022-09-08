@@ -35,22 +35,22 @@ Plug 'jiangmiao/auto-pairs'
 " Plug 'windwp/nvim-autopairs'
 Plug 'tpope/vim-commentary'
 
-Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/cmp-path'
-Plug 'hrsh7th/cmp-cmdline'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'L3MON4D3/LuaSnip'
-Plug 'saadparwaiz1/cmp_luasnip'
+" Plug 'neovim/nvim-lspconfig'
+" Plug 'hrsh7th/cmp-nvim-lsp'
+" Plug 'hrsh7th/cmp-buffer'
+" Plug 'hrsh7th/cmp-path'
+" Plug 'hrsh7th/cmp-cmdline'
+" Plug 'hrsh7th/nvim-cmp'
+" Plug 'L3MON4D3/LuaSnip'
+" Plug 'saadparwaiz1/cmp_luasnip'
 
-Plug 'rafamadriz/friendly-snippets'
+" Plug 'rafamadriz/friendly-snippets'
 
 set encoding=UTF-8
 
 call plug#end()
 " lua require("lsp_config")
-lua require 'luasnip.luasnip'
+" lua require 'luasnip.luasnip'
 " lua <<EOF
 " require('nvim-autopairs').setup {}
 " EOF
@@ -67,7 +67,7 @@ let mapleader = ','
 " directly so that we are not alerted with `the file has been changed...`
 " autocmd FileType go au BufWritePre <buffer> %!gofmt
 " Now we instead use CocConfig for that. See https://github.com/fannheyward/init.vim/blob/master/coc-settings.json
-autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
+" autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
 
 nnoremap <C-f> :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
@@ -204,48 +204,48 @@ nnoremap <C-B>c :BufCurOnly<CR>
 " inoremap {<CR> {<CR>}<Esc>O<Tab>
 
 
-lua <<EOF
-  -- Set up nvim-cmp.
-  local cmp = require'cmp'
-	local luasnip = require 'luasnip'
-	cmp.setup({
+" lua <<EOF
+"   -- Set up nvim-cmp.
+"   local cmp = require'cmp'
+" 	local luasnip = require 'luasnip'
+" 	cmp.setup({
     
-    sources = {
+"     sources = {
         
-        { name = "luasnip" },
+"         { name = "luasnip" },
         
-    },
-    mapping = {
-        ["<CR>"] = cmp.mapping.confirm { select = true },
-        ["<Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_next_item()
-          elseif luasnip.expand_or_jumpable() then
-            luasnip.expand_or_jump()
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
+"     },
+"     mapping = {
+"         ["<CR>"] = cmp.mapping.confirm { select = true },
+"         ["<Tab>"] = cmp.mapping(function(fallback)
+"           if cmp.visible() then
+"             cmp.select_next_item()
+"           elseif luasnip.expand_or_jumpable() then
+"             luasnip.expand_or_jump()
+"           else
+"             fallback()
+"           end
+"         end, { "i", "s" }),
 
-        ["<S-Tab>"] = cmp.mapping(function(fallback)
-          if cmp.visible() then
-            cmp.select_prev_item()
-          elseif luasnip.jumpable(-1) then
-            luasnip.jump(-1)
-          else
-            fallback()
-          end
-        end, { "i", "s" }),
-        },
+"         ["<S-Tab>"] = cmp.mapping(function(fallback)
+"           if cmp.visible() then
+"             cmp.select_prev_item()
+"           elseif luasnip.jumpable(-1) then
+"             luasnip.jump(-1)
+"           else
+"             fallback()
+"           end
+"         end, { "i", "s" }),
+"         },
     
-    snippet = {
-        expand = function(args)
-            local luasnip = prequire("luasnip")
-            if not luasnip then
-                return
-            end
-            luasnip.lsp_expand(args.body)
-        end,
-    },
-})
-EOF
+"     snippet = {
+"         expand = function(args)
+"             local luasnip = prequire("luasnip")
+"             if not luasnip then
+"                 return
+"             end
+"             luasnip.lsp_expand(args.body)
+"         end,
+"     },
+" })
+" EOF
