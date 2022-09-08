@@ -22,7 +22,7 @@ Plug 'https://github.com/vim-airline/vim-airline' " Status bar
 Plug 'vim-airline/vim-airline-themes'
 Plug 'https://github.com/ap/vim-css-color' " CSS Color Preview
 Plug 'https://github.com/rafi/awesome-vim-colorschemes' " Retro Scheme
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'https://github.com/ryanoasis/vim-devicons' " Developer Icons
 Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
 Plug 'vim-scripts/vim-auto-save' 
@@ -85,10 +85,10 @@ nmap <F8> :TagbarToggle<CR>
 " :colorscheme gruvbox
 set termguicolors
 let g:gruvbox_transparent_bg = 1
-hi CocSearch ctermfg=12 guifg=#b30000"00cc99
-hi CocMenuSel ctermbg=108 guibg=#006600
-highlight CocFloating ctermfg=Red guifg=#b3d9ff ctermbg=DarkGreen guibg=#262673
-highlight CocErrorFloating ctermfg=Red guifg=#b3d9ff ctermbg=DarkGreen guibg=#262673
+" hi CocSearch ctermfg=12 guifg=#b30000"00cc99
+" hi CocMenuSel ctermbg=108 guibg=#006600
+" highlight CocFloating ctermfg=Red guifg=#b3d9ff ctermbg=DarkGreen guibg=#262673
+" highlight CocErrorFloating ctermfg=Red guifg=#b3d9ff ctermbg=DarkGreen guibg=#262673
 
 " Move between buffers ---------------------------------------------------- {{{
 nnoremap <C-j> :bprev<CR>
@@ -133,7 +133,6 @@ endif
 " coc
 " inoremap <expr> <Tab> pumvisible() ? coc#_select_confirm() : "<Tab>"
 " inoremap <expr> <Tab> coc#pum#visible() ? "\<C-n>" : "\<Tab>"
-let g:coc_snippet_text = '<tab>'
 
 " inoremap <expr> <S-Tab> coc#pum#visible() ? "\<C-p>" : "\<S-Tab>"
 
@@ -141,36 +140,37 @@ let g:coc_snippet_text = '<tab>'
 " items have selected:
 " inoremap <silent><expr> <cr> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>"
 
-autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+" let g:coc_snippet_text = '<tab>'
+" autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-inoremap <silent><expr> <C-x><C-z> coc#pum#visible() ? coc#pum#stop() : "\<C-x>\<C-z>"
-inoremap <silent><expr> <TAB> 
-	\ coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" inoremap <silent><expr> <C-x><C-z> coc#pum#visible() ? coc#pum#stop() : "\<C-x>\<C-z>"
+" inoremap <silent><expr> <TAB> 
+" 	\ coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
+" inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" function! CheckBackspace() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
 
-function! g:CocShowDocumentation()
-	" supports jumping to vim documentation as well using built-ins.
-	if (index(['vim', 'help'], &filetype) >= 0)
-		execute 'h '.expand('<cword>')
-	else
-		call CocActionAsync('doHover')
-	endif
-endfunction
+" function! g:CocShowDocumentation()
+" 	" supports jumping to vim documentation as well using built-ins.
+" 	if (index(['vim', 'help'], &filetype) >= 0)
+" 		execute 'h '.expand('<cword>')
+" 	else
+" 		call CocActionAsync('doHover')
+" 	endif
+" endfunction
 
-nmap <silent> gh :call CocShowDocumentation()<CR>
+" nmap <silent> gh :call CocShowDocumentation()<CR>
 
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent> gR <Plug>(coc-rename)
-nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gd <Plug>(coc-definition)
+" nmap <silent> gi <Plug>(coc-implementation)
+" nmap <silent> gr <Plug>(coc-references)
+" nmap <silent> gR <Plug>(coc-rename)
+" nmap <silent> gy <Plug>(coc-type-definition)
 
 
 " Auto Save (vim-auto-save) ---------------------------------------------- {{{
