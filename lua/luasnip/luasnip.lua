@@ -46,185 +46,190 @@ local function simple_restore2(args, _)
 end
 
 
-ls.add_snippets("all", {
-  s("ternary", {
-    -- equivalent to "${1:cond} ? ${2:then} : ${3:else}"
-    i(1, "cond"), t(" ? "), i(2, "then"), t(" : "), i(3, "else")
-  }),
-  s("trigger", {
-    i(1, "First jump"),
-    t(" :: "),
-    sn(2, {
-      i(1, "Second jump"),
-      t " : ",
-      i(2, "Third jump")
-    })
-  }),
-  s("trig", {
-    i(1),
-    f(
-      function(args, snip, user_arg_1) return user_arg_1 .. args[1][1] end,
-      { 1 },
-      { user_args = { "Will be appended to text from i(0)", "aabb" } }
-    ),
-    i(0)
-  }),
-  s("trig2", {
-    f(reused_func, {}, { user_args = { "text " } }),
-    f(reused_func, {}, { user_args = { "different text" } }),
-  }),
-  s({ trig = "b(%d)", regTrig = true },
-    f(function(args, snip) return "Captured Text: " .. snip.captures[1] .. "."
-    end, {})
-  ),
-  s("trig3", {
-    i(1, "text_of_first "),
-    i(2, { "first_line_of_second", "second_line_of_second" }),
-    -- order is 2,1, not 1,2!!
-    f(function(args, snip)
-      return " end"
-    end, { 2, 1 })
-  }),
-  s("trig4", {
-    i(1, "text_of_first "),
-    i(2, { "first_line_of_second", "second_line_of_second", "" }),
-    -- order is 2,1, not 1,2!!
-    f(function(args, snip)
-      return args[1][1] .. " " .. args[1][2] .. args[2][1] .. " end"
-    end, { 2, 1 })
-  }),
-  s("trig5", {
-    i(1, " text_of_first "),
-    i(2, { " first_line_of_second ", " second_line_of_second " }),
-    f(function(args, snip)
-      return args[1][1] .. args[1][2] .. args[2][1]
-    end, { ai[2], ai[1] }) }),
-  postfix(".br", {
-    f(function(_, parent)
-      return "[" .. parent.snippet.env.POSTFIX_MATCH .. "]"
-    end, {}),
-  }),
-  postfix(".brl", {
-    l("[" .. l.POSTFIX_MATCH .. "]"),
-  }),
-  postfix(".brd", {
-    d(1, function(_, parent)
-      return sn(nil, { t("[" .. parent.env.POSTFIX_MATCH .. "]") })
-    end)
-  }),
-  s("trig6", c(1, {
-    t("Ugh boring, a text node"),
-    i(nil, "At least I can edit something now..."),
-    f(function(args) return "Still only counts as text!!" end, {})
-  })),
-  s("trig7", sn(1, {
-    t("basically just text "),
-    i(1, "And an insertNode.")
-  })),
-  s("isn", {
-    isn(1, {
-      t({ "This is indented as deep as the trigger",
-        "and this is at the beginning of the next line" })
-    }, "")
-  }),
-  s("isn2", {
-    isn(1, t({ "//This is", "A multiline", "comment" }), "$PARENT_INDENT//")
-  }),
-  s("trig8", {
-    t "text: ", i(1), t { "", "copy: " },
-    d(2, function(args)
-      -- the returned snippetNode doesn't need a position; it's inserted
-      -- "inside" the dynamicNode.
-      return sn(nil, {
-        -- jump-indices are local to each snippetNode, so restart at 1.
-        i(1, args[1])
-      })
-    end,
-      { 1 })
-  }),
-  s("trig9", {
-    i(1, "change to update"),
-    d(2, count, { 1 })
-  }),
-  s("paren_change", {
-    c(1, {
-      sn(nil, { t("("), r(1, "user_text"), t(")") }),
-      sn(nil, { t("["), r(1, "user_text"), t("]") }),
-      sn(nil, { t("{"), r(1, "user_text"), t("}") }),
-    }),
-  }, {
-    stored = {
-      user_text = i(1, "default_text")
-    }
-  }),
-  s("rest", {
-    i(1, "preset"), t { "", "" },
-    d(2, simple_restore, 1)
-  }),
-  s("rest2", {
-    i(1, "preset"), t { "", "" },
-    d(2, simple_restore2, 1)
-  }),
-  s("trig_ai", {
-    i(1), c(2, {
-      sn(nil, {
-        t "cannot access the argnode :(",
-        f(function(args) return args[1] end, { 1 })
-      }),
-      t "sample_text"
-    })
-  }),
-  s("trig_ai2", {
-    i(1), c(2, {
-      sn(nil, {
-        t "can access the argnode :)",
-        f(function(args) return args[1] end, { ai[1] })
-      }),
-      t "sample_text"
-    })
-  }),
+-- ls.add_snippets("all", {
+--   s("ternary", {
+--     -- equivalent to "${1:cond} ? ${2:then} : ${3:else}"
+--     i(1, "cond"), t(" ? "), i(2, "then"), t(" : "), i(3, "else")
+--   }),
+--   s("trigger", {
+--     i(1, "First jump"),
+--     t(" :: "),
+--     sn(2, {
+--       i(1, "Second jump"),
+--       t " : ",
+--       i(2, "Third jump")
+--     })
+--   }),
+--   s("trig", {
+--     i(1),
+--     f(
+--       function(args, snip, user_arg_1) return user_arg_1 .. args[1][1] end,
+--       { 1 },
+--       { user_args = { "Will be appended to text from i(0)", "aabb" } }
+--     ),
+--     i(0)
+--   }),
+--   s("trig2", {
+--     f(reused_func, {}, { user_args = { "text " } }),
+--     f(reused_func, {}, { user_args = { "different text" } }),
+--   }),
+--   s({ trig = "b(%d)", regTrig = true },
+--     f(function(args, snip) return "Captured Text: " .. snip.captures[1] .. "."
+--     end, {})
+--   ),
+--   s("trig3", {
+--     i(1, "text_of_first "),
+--     i(2, { "first_line_of_second", "second_line_of_second" }),
+--     -- order is 2,1, not 1,2!!
+--     f(function(args, snip)
+--       return " end"
+--     end, { 2, 1 })
+--   }),
+--   s("trig4", {
+--     i(1, "text_of_first "),
+--     i(2, { "first_line_of_second", "second_line_of_second", "" }),
+--     -- order is 2,1, not 1,2!!
+--     f(function(args, snip)
+--       return args[1][1] .. " " .. args[1][2] .. args[2][1] .. " end"
+--     end, { 2, 1 })
+--   }),
+--   s("trig5", {
+--     i(1, " text_of_first "),
+--     i(2, { " first_line_of_second ", " second_line_of_second " }),
+--     f(function(args, snip)
+--       return args[1][1] .. args[1][2] .. args[2][1]
+--     end, { ai[2], ai[1] }) }),
+--   postfix(".pr", {
+--     f(function(_, parent)
+--       return "(" .. parent.snippet.env.POSTFIX_MATCH .. ")"
+--     end, {}),
+--   }),
+--   postfix(".br", {
+--     f(function(_, parent)
+--       return "[" .. parent.snippet.env.POSTFIX_MATCH .. "]"
+--     end, {}),
+--   }),
+--   postfix(".brl", {
+--     l("[" .. l.POSTFIX_MATCH .. "]"),
+--   }),
+--   postfix(".brd", {
+--     d(1, function(_, parent)
+--       return sn(nil, { t("[" .. parent.env.POSTFIX_MATCH .. "]") })
+--     end)
+--   }),
+--   s("trig6", c(1, {
+--     t("Ugh boring, a text node"),
+--     i(nil, "At least I can edit something now..."),
+--     f(function(args) return "Still only counts as text!!" end, {})
+--   })),
+--   s("trig7", sn(1, {
+--     t("basically just text "),
+--     i(1, "And an insertNode.")
+--   })),
+--   s("isn", {
+--     isn(1, {
+--       t({ "This is indented as deep as the trigger",
+--         "and this is at the beginning of the next line" })
+--     }, "")
+--   }),
+--   s("isn2", {
+--     isn(1, t({ "//This is", "A multiline", "comment" }), "$PARENT_INDENT//")
+--   }),
+--   s("trig8", {
+--     t "text: ", i(1), t { "", "copy: " },
+--     d(2, function(args)
+--       -- the returned snippetNode doesn't need a position; it's inserted
+--       -- "inside" the dynamicNode.
+--       return sn(nil, {
+--         -- jump-indices are local to each snippetNode, so restart at 1.
+--         i(1, args[1])
+--       })
+--     end,
+--       { 1 })
+--   }),
+--   s("trig9", {
+--     i(1, "change to update"),
+--     d(2, count, { 1 })
+--   }),
+--   s("paren_change", {
+--     c(1, {
+--       sn(nil, { t("("), r(1, "user_text"), t(")") }),
+--       sn(nil, { t("["), r(1, "user_text"), t("]") }),
+--       sn(nil, { t("{"), r(1, "user_text"), t("}") }),
+--     }),
+--   }, {
+--     stored = {
+--       user_text = i(1, "default_text")
+--     }
+--   }),
+--   s("rest", {
+--     i(1, "preset"), t { "", "" },
+--     d(2, simple_restore, 1)
+--   }),
+--   s("rest2", {
+--     i(1, "preset"), t { "", "" },
+--     d(2, simple_restore2, 1)
+--   }),
+--   s("trig_ai", {
+--     i(1), c(2, {
+--       sn(nil, {
+--         t "cannot access the argnode :(",
+--         f(function(args) return args[1] end, { 1 })
+--       }),
+--       t "sample_text"
+--     })
+--   }),
+--   s("trig_ai2", {
+--     i(1), c(2, {
+--       sn(nil, {
+--         t "can access the argnode :)",
+--         f(function(args) return args[1] end, { ai[1] })
+--       }),
+--       t "sample_text"
+--     })
+--   }),
 
-  -- extras
-  s("extras1", {
-    i(1), t { "", "" }, m(1, "^ABC$", "A")
-  }),
-  s("extras2", {
-    i(1, "INPUT"), t { "", "" }, m(1, l._1:match(l._1:reverse()), "PALINDROME")
-  }),
-  s("extras3", {
-    i(1), t { "", "" }, i(2), t { "", "" },
-    m({ 1, 2 }, l._1:match("^" .. l._2 .. "$"), l._1:gsub("a", "e"))
-  }),
-  s("extras4", { i(1), t { "", "" }, extras.rep(1) }),
-  s("extras5", { extras.partial(os.date, "%Y") }),
-  s("extras6", { i(1, ""), t { "", "" }, extras.nonempty(1, "not empty!", "empty!") }),
-  s("extras7", { i(1), t { "", "" }, extras.dynamic_lambda(2, l._1 .. l._1, 1) }),
-})
+--   -- extras
+--   s("extras1", {
+--     i(1), t { "", "" }, m(1, "^ABC$", "A")
+--   }),
+--   s("extras2", {
+--     i(1, "INPUT"), t { "", "" }, m(1, l._1:match(l._1:reverse()), "PALINDROME")
+--   }),
+--   s("extras3", {
+--     i(1), t { "", "" }, i(2), t { "", "" },
+--     m({ 1, 2 }, l._1:match("^" .. l._2 .. "$"), l._1:gsub("a", "e"))
+--   }),
+--   s("extras4", { i(1), t { "", "" }, extras.rep(1) }),
+--   s("extras5", { extras.partial(os.date, "%Y") }),
+--   s("extras6", { i(1, ""), t { "", "" }, extras.nonempty(1, "not empty!", "empty!") }),
+--   s("extras7", { i(1), t { "", "" }, extras.dynamic_lambda(2, l._1 .. l._1, 1) }),
+-- })
 
-ls.add_snippets("all", {
-  -- important! fmt does not return a snippet, it returns a table of nodes.
-  s("example1", fmt("just an {iNode1}", {
-    iNode1 = i(1, "example")
-  })),
-  s("example2", fmt([[
-  if {} then
-    {}
-  end
-  ]], {
-    -- i(1) is at nodes[1], i(2) at nodes[2].
-    i(1, "not now"), i(2, "when")
-  })),
-  s("example3", fmt([[
-  if <> then
-    <>
-  end
-  ]], {
-    -- i(1) is at nodes[1], i(2) at nodes[2].
-    i(1, "not now"), i(2, "when")
-  }, {
-    delimiters = "<>"
-  })),
-})
+-- ls.add_snippets("all", {
+--   -- important! fmt does not return a snippet, it returns a table of nodes.
+--   s("example1", fmt("just an {iNode1}", {
+--     iNode1 = i(1, "example")
+--   })),
+--   s("example2", fmt([[
+--   if {} then
+--     {}
+--   end
+--   ]], {
+--     -- i(1) is at nodes[1], i(2) at nodes[2].
+--     i(1, "not now"), i(2, "when")
+--   })),
+--   s("example3", fmt([[
+--   if <> then
+--     <>
+--   end
+--   ]], {
+--     -- i(1) is at nodes[1], i(2) at nodes[2].
+--     i(1, "not now"), i(2, "when")
+--   }, {
+--     delimiters = "<>"
+--   })),
+-- })
 
 ls.config.setup {
   load_ft_func =
@@ -258,38 +263,38 @@ ls.env_namespace("POS", { init = function(pos) return { VAL = vim.inspect(pos) }
 
 -- then you can use  $POS_VAL in your snippets
 
-ls.add_snippets("all", {
-  ls.parser.parse_snippet({ trig = "lsp" }, "$1 is ${2|hard,easy,challenging|}"),
-  s("selected_text", f(function(args, snip)
-    local res, env = {}, snip.env
-    table.insert(res, "Selected Text (current line is " .. env.TM_LINE_NUMBER .. "):")
-    for _, ele in ipairs(env.SELECT_RAW) do table.insert(res, ele) end
-    return res
-  end, {})),
+-- ls.add_snippets("all", {
+--   ls.parser.parse_snippet({ trig = "lsp" }, "$1 is ${2|hard,easy,challenging|}"),
+--   s("selected_text", f(function(args, snip)
+--     local res, env = {}, snip.env
+--     table.insert(res, "Selected Text (current line is " .. env.TM_LINE_NUMBER .. "):")
+--     for _, ele in ipairs(env.SELECT_RAW) do table.insert(res, ele) end
+--     return res
+--   end, {})),
 
-  s("custom_env", d(1, function(args, parent)
-    local env = parent.snippet.env
-    return sn(nil, t {
-      "NAME: " .. env.MY_NAME,
-      "LANG: " .. env.MY_LANG,
-      "HOME: " .. env.SYS_HOME,
-      "USER: " .. env.SYS_USER,
-      "VAL: " .. env.POS_VAL
-    })
-  end, {})),
+--   s("custom_env", d(1, function(args, parent)
+--     local env = parent.snippet.env
+--     return sn(nil, t {
+--       "NAME: " .. env.MY_NAME,
+--       "LANG: " .. env.MY_LANG,
+--       "HOME: " .. env.SYS_HOME,
+--       "USER: " .. env.SYS_USER,
+--       "VAL: " .. env.POS_VAL
+--     })
+--   end, {})),
 
-  s("dyn_addsnip", d(1, function(args, parent)
-    return sn(nil, {
-      t(parent.snippet.env.DYN_ONE),
-      t "..",
-      t(table.concat(parent.snippet.env.DYN_TWO)),
-      t "..",
-      t(tostring(#parent.snippet.env.DYN_TWO)), -- This one behaves as a table
-      t "..",
-      t(parent.snippet.env.WTF_YEA), -- Unknow vars also work
-    })
-  end, {}))
-})
+--   s("dyn_addsnip", d(1, function(args, parent)
+--     return sn(nil, {
+--       t(parent.snippet.env.DYN_ONE),
+--       t "..",
+--       t(table.concat(parent.snippet.env.DYN_TWO)),
+--       t "..",
+--       t(tostring(#parent.snippet.env.DYN_TWO)), -- This one behaves as a table
+--       t "..",
+--       t(parent.snippet.env.WTF_YEA), -- Unknow vars also work
+--     })
+--   end, {}))
+-- })
 
 vim.cmd [[
 vnoremap <c-v>a  "ac<cmd>lua require('luasnip.extras.otf').on_the_fly()<cr>
@@ -301,6 +306,7 @@ local paths = "./luasnippets"
 require "luasnip.loaders.from_vscode".load { paths = paths }
 require "luasnip.loaders.from_snipmate".load { paths = paths }
 require "luasnip.loaders.from_lua".load { paths = paths }
+require("luasnip.loaders.from_vscode").lazy_load()
 
 -- require("luasnip.loaders").edit_snippet_files {
 --   format = function(file, source_name)
@@ -332,34 +338,34 @@ local ext_opts = {
   snippet_passive = {}
 }
 
-ls.add_snippets("all", {
-  s("ext_opt", {
-    i(1, "text1", {
-      node_ext_opts = ext_opts
-    }),
-    t { "", "" },
-    i(2, "text2", {
-      node_ext_opts = ext_opts
-    })
-  }),
+-- ls.add_snippets("all", {
+--   s("ext_opt", {
+--     i(1, "text1", {
+--       node_ext_opts = ext_opts
+--     }),
+--     t { "", "" },
+--     i(2, "text2", {
+--       node_ext_opts = ext_opts
+--     })
+--   }),
 
-  -- s({ trig = "doc(%d)", regTrig = true, }, {
-  --   f(function(args, snip)
-  --     return string.rep("repeatme ", tonumber(snip.captures[1]))
-  --   end, {})
-  -- }),
-  -- s({ trig = "doc(%d)", regTrig = true, docTrig = "2" }, {
-  --   f(function(args, snip)
-  --     return string.rep("repeatme ", tonumber(snip.captures[1]))
-  --   end, {})
-  -- }),
-  -- s({ trig = "doc(%d)", regTrig = true, docstring = "repeatmerepeatmerepeatme" }, {
-  --   f(function(args, snip)
-  --     return string.rep("repeatme ", tonumber(snip.captures[1]))
-  --   end, {})
-  -- }),
+--   -- s({ trig = "doc(%d)", regTrig = true, }, {
+--   --   f(function(args, snip)
+--   --     return string.rep("repeatme ", tonumber(snip.captures[1]))
+--   --   end, {})
+--   -- }),
+--   -- s({ trig = "doc(%d)", regTrig = true, docTrig = "2" }, {
+--   --   f(function(args, snip)
+--   --     return string.rep("repeatme ", tonumber(snip.captures[1]))
+--   --   end, {})
+--   -- }),
+--   -- s({ trig = "doc(%d)", regTrig = true, docstring = "repeatmerepeatmerepeatme" }, {
+--   --   f(function(args, snip)
+--   --     return string.rep("repeatme ", tonumber(snip.captures[1]))
+--   --   end, {})
+--   -- }),
 
-})
+-- })
 
 -- vim.api.nvim_create_autocmd("User", {
 --   pattern = "LuasnipInsertNodeEnter",
@@ -386,41 +392,87 @@ ls.add_snippets("all", {
 -- })
 
 local date = function() return {os.date('%Y-%m-%d')} end
+local function fn(
+  args,     -- text from i(2) in this example i.e. { { "456" } }
+  parent   -- parent snippet or parent node
+)
+	return '[copied>' .. args[1][1] ..'<copied]'
+end
 
-ls.add_snippets(nil, {
-	all = {
-		s({
-			trig = "date",
-			namr = "Date",
-			dscr = "Date in the form of YYYY-MM-DD",
-		}, {
-			f(date, {}),
-		}),
-		s("azad", {
-			t("gazelle")
-		}),
-			s("tfvar", {
-				t('variable "'),	i(1, 'var_name'), t '" {',
-				t {"", '\tdescription = "'}, i(2, 'description'), t '"',
-				t {"", '\ttype = '}, i(3, 'string'),
-				t {"", '\tdefault = '}, i(4, 'x'), t {""},
-				t {"", "}", ""}
-		}),
-	},
-})
+function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
 
-ls.add_snippets("txt", {
-	all = {
-		s("kevser", {
-			t("gazelleeeee")
-		}),
-	},
-})
+function dumpKeys(o)
+   if type(o) == 'table' then
+      local s = '[ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = '
+      end
+      return s .. '] '
+   else
+      return tostring(o)
+   end
+end
 
-
--- variable "server_port" {
---   description = "The port of the pap"
---   type        = number
---   default     = 8080
--- }
-
+-- ls.add_snippets(nil, {
+-- 	all = {
+-- 		s({
+-- 			trig = "date",
+-- 			namr = "Date",
+-- 			dscr = "Date in the form of YYYY-MM-DD",
+-- 		}, {
+-- 			f(date, {}),
+-- 		}),
+-- 		s("azad", {
+-- 			t("gazelle")
+-- 		}),
+-- 			s("tfvar", {
+-- 				t('variable "'),	i(1, 'var_name'), t '" {',
+-- 				t {"", '\tdescription = "'}, i(2, 'description'), t '"',
+-- 				t {"", '\ttype = '}, i(3, 'string'),
+-- 				t {"", '\tdefault = '}, i(4, 'x'), t {""},
+-- 				t {"", "}", ""}
+-- 		}),
+-- 		postfix(".var", {
+-- 			d(1, function(x, parent)
+-- 				print('hey')
+-- 				print(dump(x))
+-- 				print(dump(parent.env))
+-- 				print('--')
+-- 				print(dumpKeys(parent.old_text))
+-- 				print(tostring(parent.old_text))
+-- 				print('--')
+-- 				print(dumpKeys(parent.inner_first))
+-- 				print(tostring(parent.inner_first))
+-- 				print('--')
+-- 				print(dumpKeys(parent.inner_last))
+-- 				print(tostring(parent.inner_last))
+-- 				print(tostring(parent.inner_last.old_text))
+-- 				print('--')
+-- 				print(dumpKeys(parent))
+-- 				return sn(nil, {i(1, "var"), t(" := " .. parent.env.POSTFIX_MATCH ) })
+-- 			end)
+-- 		}),
+-- 		postfix(".err", {
+-- 			d(1, function(_, parent)
+-- 				return sn(nil, {i(1, "err"), t(" := " .. parent.env.POSTFIX_MATCH ) })
+-- 			end)
+-- 		}),
+-- 		postfix(".vare", {
+-- 			d(1, function(_, parent)
+-- 				return sn(nil, {i(1, "var"), t ", ", i(2, "err"), t(" := " .. parent.env.POSTFIX_MATCH ) })
+-- 			end)
+-- 		}),
+-- 	},
+-- })

@@ -4,7 +4,7 @@
 "
 :set number
 :set relativenumber
-:set autoindent
+" :set autoindent
 :set tabstop=2
 :set shiftwidth=2
 :set smarttab
@@ -26,13 +26,13 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'https://github.com/ryanoasis/vim-devicons' " Developer Icons
 Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
 Plug 'vim-scripts/vim-auto-save' 
-Plug 'vim-ruby/vim-ruby', {'for': 'ruby'}
+" Plug 'vim-ruby/vim-ruby', {'for': 'ruby'}
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf'
 Plug 'preservim/nerdtree'
 Plug 'neovim/nvim-lspconfig'
 Plug 'jiangmiao/auto-pairs'
-Plug 'hashivim/vim-terraform'
+" Plug 'windwp/nvim-autopairs'
 Plug 'tpope/vim-commentary'
 
 Plug 'neovim/nvim-lspconfig'
@@ -44,19 +44,30 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'L3MON4D3/LuaSnip'
 Plug 'saadparwaiz1/cmp_luasnip'
 
+Plug 'rafamadriz/friendly-snippets'
+
 set encoding=UTF-8
 
 call plug#end()
 lua require("lsp_config")
 lua require 'luasnip.luasnip'
+" lua <<EOF
+" require('nvim-autopairs').setup {}
+" EOF
 
 
-:set timeout timeoutlen=3000 ttimeoutlen=100
+" :set timeout timeoutlen=3000 ttimeoutlen=100
 let mapleader = ','
 
 
-autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
-autocmd BufWritePre *.go lua goimports(1000)
+" autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
+" autocmd BufWritePre *.go lua goimports(1000)
+" autocmd BufWritePre *.go !gofmt -w %
+" Run gofmt before writing go files. <buffer> lets us modify the buffer
+" directly so that we are not alerted with `the file has been changed...`
+" autocmd FileType go au BufWritePre <buffer> %!gofmt
+" Now we instead use CocConfig for that. See https://github.com/fannheyward/init.vim/blob/master/coc-settings.json
+autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
 
 nnoremap <C-f> :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
@@ -135,9 +146,7 @@ autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 inoremap <silent><expr> <C-x><C-z> coc#pum#visible() ? coc#pum#stop() : "\<C-x>\<C-z>"
 inoremap <silent><expr> <TAB> 
-	\ coc#pum#visible() ? coc#pum#next(1) :
-	\ <SID>CheckBackspace() ? "\<Tab>" :
-	\ coc#refresh()
+	\ coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 function! CheckBackspace() abort
@@ -240,4 +249,3 @@ lua <<EOF
     },
 })
 EOF
-

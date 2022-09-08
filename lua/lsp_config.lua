@@ -51,7 +51,7 @@ local on_attach = function(client, bufnr)
 end
 
 nvim_lsp.gopls.setup{
-	cmd = {'gopls'},
+	cmd = {'gopls', 'serve'},
 	-- for postfix snippets and analyzers
 	capabilities = capabilities,
 	    settings = {
@@ -62,6 +62,16 @@ nvim_lsp.gopls.setup{
 		        shadow = true,
 		     },
 		     staticcheck = true,
+				 linksInHover = false,
+				 codelenses = {
+						generate = true,
+						gc_details = true,
+						regenerate_cgo = true,
+						tidy = true,
+						upgrade_depdendency = true,
+						vendor = true,
+				 },
+				 usePlaceholders = true,
 		    },
 	    },
 	on_attach = on_attach,
@@ -87,7 +97,7 @@ nvim_lsp.gopls.setup{
     -- should be executed first.
     if action.edit or type(action.command) == "table" then
       if action.edit then
-        vim.lsp.util.apply_workspace_edit(action.edit)
+        vim.lsp.util.apply_workspace_edit(action.edit, 'utf-16')
       end
       if type(action.command) == "table" then
         vim.lsp.buf.execute_command(action.command)
