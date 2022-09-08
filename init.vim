@@ -49,7 +49,7 @@ Plug 'rafamadriz/friendly-snippets'
 set encoding=UTF-8
 
 call plug#end()
-lua require("lsp_config")
+" lua require("lsp_config")
 lua require 'luasnip.luasnip'
 " lua <<EOF
 " require('nvim-autopairs').setup {}
@@ -201,7 +201,7 @@ nnoremap <C-B>c :BufCurOnly<CR>
 " :nnoremap <C-h> :noh<CR>
 :set nohlsearch
 " inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() :"\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>\<tab>"
-inoremap {<CR> {<CR>}<Esc>O<Tab>
+" inoremap {<CR> {<CR>}<Esc>O<Tab>
 
 
 lua <<EOF
