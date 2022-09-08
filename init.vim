@@ -34,23 +34,31 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'jiangmiao/auto-pairs'
 " Plug 'windwp/nvim-autopairs'
 Plug 'tpope/vim-commentary'
+" Plug 'folke/lsp-colors.nvim'
 
-" Plug 'neovim/nvim-lspconfig'
-" Plug 'hrsh7th/cmp-nvim-lsp'
-" Plug 'hrsh7th/cmp-buffer'
-" Plug 'hrsh7th/cmp-path'
-" Plug 'hrsh7th/cmp-cmdline'
-" Plug 'hrsh7th/nvim-cmp'
-" Plug 'L3MON4D3/LuaSnip'
-" Plug 'saadparwaiz1/cmp_luasnip'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'L3MON4D3/LuaSnip'
+Plug 'saadparwaiz1/cmp_luasnip'
 
-" Plug 'rafamadriz/friendly-snippets'
+Plug 'rafamadriz/friendly-snippets'
 
 set encoding=UTF-8
 
 call plug#end()
-" lua require("lsp_config")
-" lua require 'luasnip.luasnip'
+lua require("lsp_config")
+lua require 'luasnip.luasnip'
+
+" lua <<EOF
+" require("lsp-colors").setup({
+"   Error = "#db4b4b",
+"   Warning = "#e0af68",
+"   Information = "#0db9d7",
+"   Hint = "#10B981"
+" })
+" EOF
 " lua <<EOF
 " require('nvim-autopairs').setup {}
 " EOF
@@ -82,9 +90,9 @@ nmap <F8> :TagbarToggle<CR>
 :set completeopt-=preview " For No Previews
 
 " :colorscheme jellybeans
-" :colorscheme gruvbox
+:colorscheme gruvbox
 set termguicolors
-let g:gruvbox_transparent_bg = 1
+" let g:gruvbox_transparent_bg = 1
 " hi CocSearch ctermfg=12 guifg=#b30000"00cc99
 " hi CocMenuSel ctermbg=108 guibg=#006600
 " highlight CocFloating ctermfg=Red guifg=#b3d9ff ctermbg=DarkGreen guibg=#262673
@@ -249,3 +257,4 @@ nnoremap <C-B>c :BufCurOnly<CR>
 "     },
 " })
 " EOF
+
