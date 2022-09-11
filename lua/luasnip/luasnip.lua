@@ -100,6 +100,29 @@ ls.add_snippets("lua", {
 	)
 })
 
+ls.add_snippets("all", {
+  ls.parser.parse_snippet("lf", "-- Defined in $TM_FILENAME\nlocal $1 = function($2)\n  $0\nend"),
+	s(
+		"tfvar",
+		fmt(
+			[[
+				variable "{}" {{
+					type = {}
+					default = {}
+					description = {}
+				}}
+			]],
+			{
+				i(1, "port"),
+				-- i(2, "number"),
+				c(2, { t "number", t "string", i(1)}),
+				i(3, "8080"),
+				i(4, "description")
+			}
+		)
+	),
+})
+
 local paths = "./luasnippets"
 require "luasnip.loaders.from_vscode".load { paths = paths }
 require "luasnip.loaders.from_snipmate".load { paths = paths }

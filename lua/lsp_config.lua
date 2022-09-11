@@ -83,6 +83,21 @@ cmp.setup.filetype('gitcommit', {
 	})
 })
 
+
+------------------------------------
+-- Terraform
+require'lspconfig'.terraformls.setup{
+	on_attach = function()
+		vim.keymap.set("n", "K", vim.lsp.buf.hover, {buffer=0})
+		vim.keymap.set("n", "<leader>dj", vim.diagnostic.goto_next, {buffer=0})
+		vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_next, {buffer=0})
+	end,
+}
+vim.api.nvim_create_autocmd({"BufWritePre"}, {
+  pattern = {"*.tf", "*.tfvars"},
+  callback = vim.lsp.buf.formatting_sync,
+})
+
 -----------------------------------
 --local nvim_lsp = require('lspconfig')
 

@@ -45,6 +45,8 @@ Plug 'saadparwaiz1/cmp_luasnip'
 
 Plug 'rafamadriz/friendly-snippets'
 
+Plug 'hashivim/vim-terraform'
+
 set encoding=UTF-8
 
 call plug#end()
