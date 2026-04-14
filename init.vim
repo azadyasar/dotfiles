@@ -122,7 +122,8 @@ nnoremap <leader>t :NvimTreeFindFile<CR>
 " Fuzzy find (fzf.vim) — ,f = find-in-files (VS Code style)
 nnoremap <C-p>      :GFiles<CR>
 nnoremap <leader>f  :RG<CR>
-nnoremap <leader>ff :Files<CR>
+nnoremap gf :Files<CR>
+" nnoremap <leader>ff :Files<CR>
 nnoremap <leader>fb :Buffers<CR>
 nnoremap <leader>fh :History<CR>
 
