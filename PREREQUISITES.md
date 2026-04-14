@@ -55,6 +55,9 @@ Then set your terminal (iTerm2 / Ghostty / Terminal.app) font to **Hack Nerd Fon
 |----------|--------|---------|
 | Go | `gopls` | `brew install gopls` (or `go install golang.org/x/tools/gopls@latest`) |
 | Terraform | `terraform-ls` | `brew install hashicorp/tap/terraform-ls` |
+| Dart / Flutter | `dart language-server` | Ships with Flutter SDK — ensure `flutter/bin` is on `PATH` |
+| Java | `jdtls` (Eclipse JDT.LS) | `brew install jdtls` — requires JDK 17+ (`brew install openjdk@21`) |
+| Python | `pyright` | `brew install pyright` (or `npm i -g pyright`) |
 
 If you uncomment additional servers in `lsp_config.lua`, add them here:
 

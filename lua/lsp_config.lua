@@ -1,5 +1,19 @@
--- Set up lspconfig.
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+-- LSP setup using the Neovim 0.11+ API (vim.lsp.config / vim.lsp.enable).
+-- nvim-lspconfig still ships per-server defaults under `lsp/*.lua`, which
+-- vim.lsp.enable() discovers automatically via runtimepath.
+
+-- Default capabilities applied to every server (includes nvim-cmp extras).
+vim.lsp.config('*', {
+	capabilities = require('cmp_nvim_lsp').default_capabilities(),
+})
+
+-- Per-server overrides (merged on top of defaults).
+vim.lsp.config('dartls', {
+	cmd = { 'dart', 'language-server', '--protocol=lsp' },
+})
+
+-- Enable the servers we use.
+vim.lsp.enable({ 'gopls', 'terraformls', 'dartls', 'jdtls', 'pyright' })
 
 -- Global LSP keymaps: applied to every buffer where an LSP attaches.
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -9,7 +23,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		-- Navigation
 		vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)        -- go to definition
 		vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)       -- go to declaration
-		vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)    -- go to implementation
+		vim.keymap.set('n', '<leader>gi', vim.lsp.buf.implementation, opts) -- go to implementation (gi clashes with builtin insert)
 		vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)   -- go to type definition
 		vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)        -- list references
 		-- Hover / signature
@@ -24,10 +38,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		vim.keymap.set('n', '<leader>dk', vim.diagnostic.goto_prev, opts)
 	end,
 })
-
-require'lspconfig'.gopls.setup{ capabilities = capabilities } -- connect to server
-
-
 
 vim.opt.completeopt={"menu", "menuone", "noselect"}
 
@@ -95,9 +105,7 @@ cmp.setup.filetype('gitcommit', {
 })
 
 
-------------------------------------
--- Terraform
-require'lspconfig'.terraformls.setup{ capabilities = capabilities }
+-- Servers are enabled at the top via vim.lsp.enable({...}).
 
 -- vim.api.nvim_create_autocmd({"BufWritePre"}, {
 --   pattern = {"*.tf", "*.tfvars"},

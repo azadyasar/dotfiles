@@ -82,7 +82,8 @@ nnoremap <C-l> <C-w>l
 nnoremap <Tab>      :bnext<CR>
 nnoremap <S-Tab>    :bprev<CR>
 nnoremap <leader>g  <C-^>
-nnoremap <leader>bd :bdelete<CR>
+" nnoremap <leader>bd :bdelete<CR>
+nnoremap <leader>q :bdelete<CR>
 nnoremap <leader>bl :ls<CR>
 
 " File tree (NERDTree): ,e toggle, ,E reveal current file
