@@ -15,6 +15,10 @@
 " highlight ColorColumn ctermbg=black guibg=lightgrey
 :hi ColorColumn ctermbg=DarkMagenta guibg=blue
 
+" Disable netrw so nvim-tree can take over file browsing
+let g:loaded_netrw = 1
+let g:loaded_netrwPlugin = 1
+
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'http://github.com/tpope/vim-surround' " Surroundinenting gcc & gc
@@ -29,7 +33,8 @@ Plug 'vim-scripts/vim-auto-save'
 " Plug 'vim-ruby/vim-ruby', {'for': 'ruby'}
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/fzf'
-Plug 'preservim/nerdtree'
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'nvim-tree/nvim-tree.lua'
 Plug 'neovim/nvim-lspconfig'
 " Plug 'jiangmiao/auto-pairs'
 " Plug 'windwp/nvim-autopairs'
@@ -67,10 +72,33 @@ if ok then
     indent = { enable = true },
   }
 end
+
+local ok_tree, nvim_tree = pcall(require, 'nvim-tree')
+if ok_tree then
+  nvim_tree.setup {
+    view = {
+      width = 50,
+      side = 'left',
+    },
+    renderer = {
+      group_empty = true,
+      icons = {
+        show = { file = true, folder = true, folder_arrow = true, git = true },
+        glyphs = {
+          folder = {
+            arrow_closed = '▸',
+            arrow_open   = '▾',
+          },
+        },
+      },
+    },
+    filters = { dotfiles = false },
+    actions = { open_file = { quit_on_open = false } },
+  }
+end
 EOF
 
 let mapleader = ','
-let g:NERDTreeWinSize = 50          " default is 31
 
 " Navigation ------------------------------------------------------------- {{{
 " Windows (splits): Ctrl-h/j/k/l to move between splits
@@ -87,9 +115,9 @@ nnoremap <leader>g  <C-^>
 nnoremap <leader>q :bdelete<CR>
 nnoremap <leader>bl :ls<CR>
 
-" File tree (NERDTree): ,e toggle, ,E reveal current file
-nnoremap <leader>e :NERDTreeToggle<CR>
-nnoremap <leader>t :NERDTreeFind<CR>
+" File tree (nvim-tree): ,e toggle, ,t reveal current file
+nnoremap <leader>e :NvimTreeToggle<CR>
+nnoremap <leader>t :NvimTreeFindFile<CR>
 
 " Fuzzy find (fzf.vim) — ,f = find-in-files (VS Code style)
 nnoremap <C-p>      :GFiles<CR>
@@ -124,12 +152,6 @@ silent! colorscheme gruvbox
 " hi CocMenuSel ctermbg=108 guibg=#006600
 " highlight CocFloating ctermfg=Red guifg=#b3d9ff ctermbg=DarkGreen guibg=#262673
 " highlight CocErrorFloating ctermfg=Red guifg=#b3d9ff ctermbg=DarkGreen guibg=#262673
-
-" NerdTree settings ------------------------------------------------------ {{{
-let g:NERDTreeDirArrowExpandable = '▸'
-let g:NERDTreeDirArrowCollapsible = '▾'
-let NERDTreeHighlightCursorline = 0
-" ------------------------------------------------------------------------ }}}
 
 " --- Just Some Notes ---
 " :PlugClean :PlugInstall :UpdateRemotePlugins
