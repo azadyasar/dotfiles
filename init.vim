@@ -70,6 +70,7 @@ end
 EOF
 
 let mapleader = ','
+let g:NERDTreeWinSize = 50          " default is 31
 
 " Navigation ------------------------------------------------------------- {{{
 " Windows (splits): Ctrl-h/j/k/l to move between splits
