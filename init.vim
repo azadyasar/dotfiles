@@ -47,70 +47,86 @@ Plug 'rafamadriz/friendly-snippets'
 
 Plug 'hashivim/vim-terraform'
 
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
 set encoding=UTF-8
 
 call plug#end()
-lua require("lsp_config")
-lua require 'luasnip.luasnip'
 
-" lua <<EOF
-" require("lsp-colors").setup({
-"   Error = "#db4b4b",
-"   Warning = "#e0af68",
-"   Information = "#0db9d7",
-"   Hint = "#10B981"
-" })
-" EOF
-" lua <<EOF
-" require('nvim-autopairs').setup {}
-" EOF
+lua <<EOF
+local ok, ts = pcall(require, 'nvim-treesitter.configs')
+if ok then
+  ts.setup {
+    ensure_installed = {
+      "lua", "vim", "vimdoc", "dart", "java", "kotlin", "go",
+      "python", "typescript", "tsx", "javascript", "json", "yaml",
+      "bash", "markdown", "markdown_inline", "html", "css",
+      "hcl", "terraform", "sql", "dockerfile", "toml",
+    },
+    highlight = { enable = true, additional_vim_regex_highlighting = false },
+    indent = { enable = true },
+  }
+end
+EOF
 
-
-" :set timeout timeoutlen=3000 ttimeoutlen=100
 let mapleader = ','
 
+" Navigation ------------------------------------------------------------- {{{
+" Windows (splits): Ctrl-h/j/k/l to move between splits
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
-" autocmd BufWritePre *.go lua vim.lsp.buf.formatting()
-" autocmd BufWritePre *.go lua goimports(1000)
-" autocmd BufWritePre *.go !gofmt -w %
-" Run gofmt before writing go files. <buffer> lets us modify the buffer
-" directly so that we are not alerted with `the file has been changed...`
-" autocmd FileType go au BufWritePre <buffer> %!gofmt
-" Now we instead use CocConfig for that. See https://github.com/fannheyward/init.vim/blob/master/coc-settings.json
-" autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
+" Buffers: Tab / Shift-Tab to cycle, ,g to toggle alternate, ,bd to close
+nnoremap <Tab>      :bnext<CR>
+nnoremap <S-Tab>    :bprev<CR>
+nnoremap <leader>g  <C-^>
+nnoremap <leader>bd :bdelete<CR>
+nnoremap <leader>bl :ls<CR>
 
-nnoremap <C-f> :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
-nnoremap <C-l> :call CocActionAsync('jumpDefinition')<CR>
-nnoremap <C-p> :GFiles<CR>
-nnoremap <leader>f :NERDTreeFind<cr>
-nnoremap <leader>g <C-^><cr>
+" File tree (NERDTree): ,e toggle, ,E reveal current file
+nnoremap <leader>e :NERDTreeToggle<CR>
+nnoremap <leader>t :NERDTreeFind<CR>
 
+" Fuzzy find (fzf.vim) — ,f = find-in-files (VS Code style)
+nnoremap <C-p>      :GFiles<CR>
+nnoremap <leader>f  :RG<CR>
+nnoremap <leader>ff :Files<CR>
+nnoremap <leader>fb :Buffers<CR>
+nnoremap <leader>fh :History<CR>
+
+" Misc
+inoremap <C-e> <Esc>
 nmap <F8> :TagbarToggle<CR>
+" ------------------------------------------------------------------------ }}}
+
+" Live ripgrep (override fzf.vim :RG to tolerate empty initial query) ---- {{{
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--disabled', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+" ------------------------------------------------------------------------ }}}
 
 :set completeopt-=preview " For No Previews
 
-" :colorscheme jellybeans
-:colorscheme gruvbox
 set termguicolors
+set background=dark
+silent! colorscheme gruvbox
 " let g:gruvbox_transparent_bg = 1
 " hi CocSearch ctermfg=12 guifg=#b30000"00cc99
 " hi CocMenuSel ctermbg=108 guibg=#006600
 " highlight CocFloating ctermfg=Red guifg=#b3d9ff ctermbg=DarkGreen guibg=#262673
 " highlight CocErrorFloating ctermfg=Red guifg=#b3d9ff ctermbg=DarkGreen guibg=#262673
 
-" Move between buffers ---------------------------------------------------- {{{
-nnoremap <C-j> :bprev<CR>
-nnoremap <C-k> :bnext<CR>
-" ------------------------------------------------------------------------ }}}
-
-" NerdTree (nerdtree) ---------------------------------------------------- {{{
+" NerdTree settings ------------------------------------------------------ {{{
 let g:NERDTreeDirArrowExpandable = '▸'
 let g:NERDTreeDirArrowCollapsible = '▾'
 let NERDTreeHighlightCursorline = 0
-map <C-n> :NERDTreeToggle<cr>
-nnoremap <leader>nf :NERDTreeFind<cr>
 " ------------------------------------------------------------------------ }}}
 
 " --- Just Some Notes ---
@@ -188,15 +204,6 @@ let g:auto_save = 1                 " enable autosave on vim startup
 let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
 " ------------------------------------------------------------------------ }}}
 
-" Quicker Window Movement
-nnoremap <c-j> <c-w>j
-nnoremap <c-k> <c-w>k
-nnoremap <c-h> <c-w>h
-nnoremap <c-l> <c-w>l
-nnoremap <leader>g <C-^>
-inoremap <C-e> <Esc>
-" ------------------------------------------------------------------------ }}} 
-"
 " Comments (vim-commentary) ---------------------------------------------- {{{
 map  gc  <plug>Commentary
 nmap gcc <plug>CommentaryLine

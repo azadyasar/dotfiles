@@ -1,20 +1,31 @@
 -- Set up lspconfig.
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-require'lspconfig'.gopls.setup{
-	capabilities = capabilities,
-	on_attach = function()
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, {buffer=0})
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, {buffer=0})
-		vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, {buffer=0})
-		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, {buffer=0})
-		vim.keymap.set("n", "ff", vim.lsp.buf.formatting, {buffer=0})
-		vim.keymap.set("n", "<leader>dj", vim.diagnostic.goto_next, {buffer=0})
-		vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_next, {buffer=0})
-		vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, {buffer=0})
-		vim.keymap.set("n", "ca", vim.lsp.buf.code_action, {buffer=0})
+-- Global LSP keymaps: applied to every buffer where an LSP attaches.
+vim.api.nvim_create_autocmd('LspAttach', {
+	group = vim.api.nvim_create_augroup('UserLspKeymaps', { clear = true }),
+	callback = function(args)
+		local opts = { buffer = args.buf, silent = true }
+		-- Navigation
+		vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)        -- go to definition
+		vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)       -- go to declaration
+		vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)    -- go to implementation
+		vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, opts)   -- go to type definition
+		vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)        -- list references
+		-- Hover / signature
+		vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+		vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+		-- Edits
+		vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, opts)
+		vim.keymap.set({'n','v'}, 'ca', vim.lsp.buf.code_action, opts)
+		vim.keymap.set('n', 'ff', function() vim.lsp.buf.format({ async = true }) end, opts)
+		-- Diagnostics
+		vim.keymap.set('n', '<leader>dj', vim.diagnostic.goto_next, opts)
+		vim.keymap.set('n', '<leader>dk', vim.diagnostic.goto_prev, opts)
 	end,
-} -- connect to server
+})
+
+require'lspconfig'.gopls.setup{ capabilities = capabilities } -- connect to server
 
 
 
@@ -62,7 +73,7 @@ cmp.setup({
 		['<C-f>'] = cmp.mapping.scroll_docs(4),
 		['<C-Space>'] = cmp.mapping.complete(),
 		['<C-e>'] = cmp.mapping.abort(),
-		['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+		['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
 	}),
 	sources = cmp.config.sources({
 		{ name = 'nvim_lsp' },
@@ -86,18 +97,28 @@ cmp.setup.filetype('gitcommit', {
 
 ------------------------------------
 -- Terraform
-require'lspconfig'.terraformls.setup{
-	on_attach = function()
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, {buffer=0})
-		vim.keymap.set("n", "<leader>dj", vim.diagnostic.goto_next, {buffer=0})
-		vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_next, {buffer=0})
-	end,
-}
-vim.api.nvim_create_autocmd({"BufWritePre"}, {
-  pattern = {"*.tf", "*.tfvars"},
-  callback = vim.lsp.buf.formatting_sync,
-})
+require'lspconfig'.terraformls.setup{ capabilities = capabilities }
 
+-- vim.api.nvim_create_autocmd({"BufWritePre"}, {
+--   pattern = {"*.tf", "*.tfvars"},
+--   callback = vim.lsp.buf.formatting_sync,
+-- })
+
+-- require'lspconfig'.tsserver.setup{
+-- 	capabilities = capabilities,
+-- 	on_attach = function()
+-- 		print("setting up tsserver")
+-- 		vim.keymap.set("n", "K", vim.lsp.buf.hover, {buffer=0})
+-- 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, {buffer=0})
+-- 		vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, {buffer=0})
+-- 		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, {buffer=0})
+-- 		vim.keymap.set("n", "ff", vim.lsp.buf.formatting, {buffer=0})
+-- 		vim.keymap.set("n", "<leader>dj", vim.diagnostic.goto_next, {buffer=0})
+-- 		vim.keymap.set("n", "<leader>dk", vim.diagnostic.goto_next, {buffer=0})
+-- 		vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, {buffer=0})
+-- 		vim.keymap.set("n", "ca", vim.lsp.buf.code_action, {buffer=0})
+-- 	end,
+-- }
 -----------------------------------
 --local nvim_lsp = require('lspconfig')
 
