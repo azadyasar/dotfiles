@@ -20,7 +20,7 @@ map('n', '<leader>t', ':NvimTreeFindFile<CR>', opts)
 
 -- Fuzzy find (fzf.vim)
 map('n', '<C-p>', ':GFiles<CR>', opts)
-map('n', '<leader>f', ':RG<CR>', opts)
+map('n', '<leader>ff', ':RG<CR>', opts)
 map('n', 'gf', ':Files<CR>', opts)
 map('n', '<leader>fb', ':Buffers<CR>', opts)
 map('n', '<leader>fh', ':History<CR>', opts)
