@@ -20,4 +20,4 @@ vim.opt.background = 'dark'
 vim.opt.encoding = 'UTF-8'
 
 vim.cmd('silent! colorscheme gruvbox')
-vim.cmd('hi ColorColumn ctermbg=DarkMagenta guibg=blue')
+vim.cmd('hi ColorColumn ctermbg=235 guibg=#3c3836')
